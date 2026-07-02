@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Assistant - Premium Chat</title>
+<!-- Font Integration -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-secondary-fixed-variant": "#3a4858",
+                "inverse-surface": "#2e3132",
+                "primary-fixed": "#dce1ff",
+                "on-primary-fixed": "#00164e",
+                "tertiary-container": "#314156",
+                "tertiary": "#1b2b3f",
+                "surface": "#f8f9fa",
+                "on-background": "#191c1d",
+                "surface-bright": "#f8f9fa",
+                "outline": "#757682",
+                "on-tertiary-fixed": "#0b1c30",
+                "on-primary": "#ffffff",
+                "background": "#f8f9fa",
+                "error-container": "#ffdad6",
+                "on-surface-variant": "#444651",
+                "on-primary-container": "#90a8ff",
+                "primary": "#00236f",
+                "on-surface": "#191c1d",
+                "inverse-primary": "#b6c4ff",
+                "outline-variant": "#c5c5d3",
+                "on-primary-fixed-variant": "#264191",
+                "primary-container": "#1e3a8a",
+                "surface-container": "#edeeef",
+                "inverse-on-surface": "#f0f1f2",
+                "surface-dim": "#d9dadb",
+                "on-secondary": "#ffffff",
+                "error": "#ba1a1a",
+                "on-secondary-fixed": "#0e1d2b",
+                "tertiary-fixed": "#d3e4fe",
+                "on-tertiary-fixed-variant": "#38485d",
+                "surface-container-high": "#e7e8e9",
+                "on-error-container": "#93000a",
+                "secondary": "#516070",
+                "surface-variant": "#e1e3e4",
+                "on-error": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-fixed": "#d5e4f8",
+                "surface-container-low": "#f3f4f5",
+                "on-tertiary-container": "#9dadc6",
+                "tertiary-fixed-dim": "#b7c8e1",
+                "secondary-container": "#d5e4f8",
+                "primary-fixed-dim": "#b6c4ff",
+                "secondary-fixed-dim": "#b9c8db",
+                "on-secondary-container": "#576676",
+                "surface-tint": "#4059aa",
+                "surface-container-highest": "#e1e3e4",
+                "on-tertiary": "#ffffff"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "stack-xs": "0.25rem",
+                "gutter": "1.5rem",
+                "stack-lg": "1.5rem",
+                "container-max": "1200px",
+                "stack-sm": "0.5rem",
+                "margin-mobile": "1rem",
+                "stack-md": "1rem"
+            },
+            "fontFamily": {
+                "body-lg": ["Hanken Grotesk"],
+                "headline-lg-mobile": ["Hanken Grotesk"],
+                "label-md": ["Hanken Grotesk"],
+                "body-md": ["Hanken Grotesk"],
+                "headline-lg": ["Hanken Grotesk"],
+                "headline-md": ["Hanken Grotesk"],
+                "label-sm": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}],
+                "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "label-sm": ["10px", {"lineHeight": "14px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chat-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .message-shadow {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-lg overflow-hidden h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-background shadow-sm flex items-center justify-between px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors rounded-full active:scale-95 duration-150" onclick="toggleDrawer()">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md-mobile font-bold text-primary dark:text-inverse-primary">AI Assistant</h1>
+</div>
+<div class="flex items-center gap-2">
+<!-- Token Badge in Header for visibility -->
+<div class="hidden md:flex items-center bg-surface-container-high px-3 py-1 rounded-full gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="monitoring">monitoring</span>
+<span class="font-label-md text-label-md text-on-surface-variant">45k / 100k</span>
+</div>
+<button class="p-2 hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Sidebar (NavigationDrawer) Overlay -->
+<div class="fixed inset-0 bg-black/20 backdrop-blur-sm z-[55] opacity-0 pointer-events-none transition-opacity duration-300" id="drawer-overlay" onclick="toggleDrawer()"></div>
+<!-- NavigationDrawer -->
+<aside class="fixed inset-y-0 left-0 z-[60] flex flex-col py-stack-lg bg-surface-container-low dark:bg-surface-container-highest h-full w-72 rounded-r-xl shadow-lg -translate-x-full transition-transform duration-300 ease-in-out" id="drawer">
+<!-- Profile Header -->
+<div class="px-6 pb-6 border-b border-outline-variant/30">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a sophisticated tech user in a minimalist office setting. The lighting is soft and high-key, using a palette of clean whites and muted blue tones to match a premium software interface. The individual looks focused and approachable, representing a 'Pro Plan' user." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-839EhPudFgAPdEKVBeeVMaTqletNVCKiopQQR89YNOzfzUH_IcvF6U1FLwjG3UtoWpE6hTXyj242ddzKp0H091x_uKCL-vIYSvoVag28V2curHA1AQD5BWsrlVJAwG0cW5Jw42s6MDMXvR9E_2ocw_cNdIQia8tiODVSAIkeEMMwEpcpPBlLI5entoMWyW5eAdTVYnIked-pTOV-O_YVv9-zBdsK7cK5SLSPru_hwmkY_t28zpcSTfyoeussJdJifiPLSAJYcQo"/>
+</div>
+<div>
+<h3 class="font-headline-md text-body-lg font-bold text-primary">User Account</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Pro Plan Active</p>
+</div>
+</div>
+<!-- Token Stats Section -->
+<div class="bg-surface-container-highest p-4 rounded-xl space-y-2">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">Tokens Usage</span>
+<span class="font-label-md text-label-md text-primary font-bold">45%</span>
+</div>
+<div class="h-1.5 w-full bg-outline-variant/30 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[45%] rounded-full"></div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant text-right">Tokens: 45k/100k</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 mt-6 overflow-y-auto space-y-1">
+<p class="px-6 mb-2 font-label-md text-label-md uppercase tracking-widest text-on-surface-variant opacity-60">General</p>
+<a class="flex items-center gap-stack-md bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-3 mx-2 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-body-lg text-body-lg">Recent Chats</span>
+</a>
+<a class="flex items-center gap-stack-md text-on-surface-variant dark:text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="archive">archive</span>
+<span class="font-body-lg text-body-lg">Archived</span>
+</a>
+<p class="px-6 mt-6 mb-2 font-label-md text-label-md uppercase tracking-widest text-on-surface-variant opacity-60">System</p>
+<a class="flex items-center gap-stack-md text-on-surface-variant dark:text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-body-lg text-body-lg">Token Stats</span>
+</a>
+<a class="flex items-center gap-stack-md text-on-surface-variant dark:text-on-surface-variant px-4 py-3 mx-2 hover:bg-surface-container-high dark:hover:bg-surface-variant rounded-full transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-lg text-body-lg">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 mt-16 pb-24 overflow-hidden relative flex flex-col items-center">
+<!-- Chat History Area -->
+<div class="w-full max-w-[800px] flex-1 overflow-y-auto px-4 py-8 chat-scroll flex flex-col gap-6" id="chat-feed">
+<!-- AI Message -->
+<div class="flex flex-col items-start max-w-[85%] animate-fade-in">
+<div class="flex items-center gap-2 mb-1 ml-2">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="smart_toy">smart_toy</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Asistente de IA</span>
+</div>
+<div class="bg-surface-container-lowest text-on-background p-4 rounded-2xl rounded-tl-none message-shadow border border-outline-variant/10">
+<p class="font-body-lg text-body-lg">¡Hola! Soy tu asistente inteligente. ¿En qué puedo ayudarte hoy con tu flujo de trabajo o consultas técnicas?</p>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1 ml-2">10:45 AM</span>
+</div>
+<!-- User Message -->
+<div class="flex flex-col items-end self-end max-w-[85%] animate-fade-in">
+<div class="flex items-center gap-2 mb-1 mr-2">
+<span class="font-label-md text-label-md text-on-surface-variant">Tú</span>
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="person">person</span>
+</div>
+<div class="bg-secondary-container text-primary p-4 rounded-2xl rounded-tr-none border border-primary/10">
+<p class="font-body-lg text-body-lg">Necesito optimizar una consulta SQL para una base de datos de gran escala. ¿Podrías darme algunos consejos sobre indexación?</p>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1 mr-2">10:46 AM</span>
+</div>
+<!-- AI Message (Detailed) -->
+<div class="flex flex-col items-start max-w-[85%] animate-fade-in">
+<div class="flex items-center gap-2 mb-1 ml-2">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="smart_toy">smart_toy</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Asistente de IA</span>
+</div>
+<div class="bg-surface-container-lowest text-on-background p-4 rounded-2xl rounded-tl-none message-shadow border border-outline-variant/10">
+<p class="font-body-lg text-body-lg">Claro, para bases de datos a gran escala te recomiendo:</p>
+<ul class="list-disc ml-5 mt-2 space-y-1 font-body-md text-body-md">
+<li>Usar índices compuestos para consultas con múltiples filtros.</li>
+<li>Analizar el plan de ejecución (EXPLAIN ANALYZE) para detectar cuellos de botella.</li>
+<li>Considerar particionamiento de tablas si superas los millones de registros.</li>
+</ul>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1 ml-2">10:47 AM</span>
+</div>
+</div>
+<!-- Input Area (Pinned to bottom) -->
+<div class="fixed bottom-0 left-0 w-full flex justify-center p-4 bg-surface/80 backdrop-blur-md z-40">
+<div class="w-full max-w-[800px] relative">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-2 flex items-end gap-2 shadow-sm focus-within:shadow-md focus-within:border-primary transition-all">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="attach_file">attach_file</span>
+</button>
+<textarea class="flex-1 bg-transparent border-none focus:ring-0 resize-none py-2 font-body-lg text-body-lg max-h-32" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" placeholder="Escribe tu mensaje aquí..." rows="1"></textarea>
+<button class="bg-primary text-white p-3 rounded-xl active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="send" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+<div class="mt-2 flex justify-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-60">AI can make mistakes. Check important info.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only Responsive Pivot) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-safe h-16 bg-surface/80 dark:bg-background/80 backdrop-blur-md border-t border-outline-variant dark:border-outline z-50">
+<button class="flex flex-col items-center justify-center bg-secondary-container dark:bg-primary-container text-on-secondary-container dark:text-on-primary-container rounded-2xl p-2 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="chat" style="font-variation-settings: 'FILL' 1;">chat</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:bg-surface-container-highest/50 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="explore">explore</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant p-2 hover:bg-surface-container-highest/50 active:scale-90 transition-transform" onclick="toggleDrawer()">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</nav>
+<script>
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('drawer-overlay');
+        let isDrawerOpen = false;
+
+        function toggleDrawer() {
+            isDrawerOpen = !isDrawerOpen;
+            if (isDrawerOpen) {
+                drawer.classList.remove('-translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                overlay.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                drawer.classList.add('-translate-x-full');
+                overlay.classList.remove('opacity-</script></body></html>
