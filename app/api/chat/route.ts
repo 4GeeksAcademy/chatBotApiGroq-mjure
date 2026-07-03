@@ -12,6 +12,12 @@ type ChatRequestBody = {
   history?: ChatMessage[];
 };
 
+type GroqUsage = {
+  prompt_tokens?: number;
+  completion_tokens?: number;
+  total_tokens?: number;
+};
+
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 const DEFAULT_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
@@ -100,6 +106,7 @@ export async function POST(request: Request) {
       | {
           choices?: Array<{ message?: { content?: string } }>;
           error?: { message?: string };
+          usage?: GroqUsage;
         }
       | null;
 
@@ -122,7 +129,15 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ reply });
+    return NextResponse.json({
+      reply,
+      usage: {
+        promptTokens: payload?.usage?.prompt_tokens ?? 0,
+        completionTokens: payload?.usage?.completion_tokens ?? 0,
+        totalTokens: payload?.usage?.total_tokens ?? 0,
+      },
+      model: DEFAULT_MODEL,
+    });
   } catch {
     return NextResponse.json(
       { error: "No se pudo conectar con el servicio de Groq." },

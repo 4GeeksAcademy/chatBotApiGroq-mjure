@@ -16,6 +16,34 @@ type ApiHistoryMessage = {
   content: string;
 };
 
+type TokenUsage = {
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+};
+
+type ChatStats = {
+  turns: number;
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  lastModel: string;
+};
+
+const EMPTY_USAGE: TokenUsage = {
+  promptTokens: 0,
+  completionTokens: 0,
+  totalTokens: 0,
+};
+
+const INITIAL_STATS: ChatStats = {
+  turns: 0,
+  promptTokens: 0,
+  completionTokens: 0,
+  totalTokens: 0,
+  lastModel: "-",
+};
+
 const INITIAL_MESSAGES: UiMessage[] = [
   {
     id: "m-1",
@@ -46,6 +74,8 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState<ChatStats>(INITIAL_STATS);
+  const [lastUsage, setLastUsage] = useState<TokenUsage>(EMPTY_USAGE);
   const feedRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -96,7 +126,12 @@ export default function Home() {
         }),
       });
 
-      const payload = (await response.json()) as { reply?: string; error?: string };
+      const payload = (await response.json()) as {
+        reply?: string;
+        error?: string;
+        model?: string;
+        usage?: TokenUsage;
+      };
 
       if (!response.ok) {
         throw new Error(payload.error || "No se pudo obtener respuesta de Groq.");
@@ -105,6 +140,16 @@ export default function Home() {
       if (!payload.reply) {
         throw new Error("Groq no devolvio contenido en la respuesta.");
       }
+
+      const usage = payload.usage ?? EMPTY_USAGE;
+      setLastUsage(usage);
+      setStats((previous) => ({
+        turns: previous.turns + 1,
+        promptTokens: previous.promptTokens + usage.promptTokens,
+        completionTokens: previous.completionTokens + usage.completionTokens,
+        totalTokens: previous.totalTokens + usage.totalTokens,
+        lastModel: payload.model ?? previous.lastModel,
+      }));
 
       setMessages((previous) => [...previous, createMessage("assistant", payload.reply || "")]);
     } catch (caughtError) {
@@ -197,6 +242,41 @@ export default function Home() {
           </button>
         </nav>
       </main>
+
+      <aside className="stats-aside" aria-label="Estadisticas de tokens">
+        <h2>Estadisticas</h2>
+        <p className="stats-subtitle">Visibles todo el tiempo durante la sesion.</p>
+
+        <div className="stats-grid">
+          <article className="stats-card">
+            <span>Total tokens</span>
+            <strong>{stats.totalTokens.toLocaleString("es-ES")}</strong>
+          </article>
+          <article className="stats-card">
+            <span>Prompt</span>
+            <strong>{stats.promptTokens.toLocaleString("es-ES")}</strong>
+          </article>
+          <article className="stats-card">
+            <span>Completado</span>
+            <strong>{stats.completionTokens.toLocaleString("es-ES")}</strong>
+          </article>
+          <article className="stats-card">
+            <span>Respuestas</span>
+            <strong>{stats.turns.toLocaleString("es-ES")}</strong>
+          </article>
+        </div>
+
+        <div className="stats-divider" />
+
+        <div className="stats-list">
+          <p>
+            Ultima respuesta: <b>{lastUsage.totalTokens.toLocaleString("es-ES")}</b> tokens
+          </p>
+          <p>
+            Modelo actual: <b>{stats.lastModel}</b>
+          </p>
+        </div>
+      </aside>
     </div>
   );
 }

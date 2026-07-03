@@ -50,9 +50,81 @@ a {
 
 .app-shell {
   min-height: 100dvh;
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.1rem;
   padding: 1rem;
+}
+
+.stats-aside {
+  width: min(100%, 320px);
+  min-height: min(100dvh - 2rem, 920px);
+  align-self: stretch;
+  position: sticky;
+  top: 1rem;
+  border: 1px solid var(--outline-variant);
+  border-radius: 1.25rem;
+  background: var(--surface-container-lowest);
+  box-shadow: 0 10px 24px rgba(20, 28, 47, 0.08);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.stats-aside h2 {
+  font-size: 1.15rem;
+  color: var(--primary);
+}
+
+.stats-subtitle {
+  color: var(--on-surface-variant);
+  font-size: 0.86rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+.stats-card {
+  border: 1px solid var(--outline-variant);
+  border-radius: 0.9rem;
+  background: var(--surface-container-low);
+  padding: 0.7rem 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stats-card span {
+  color: var(--on-surface-variant);
+  font-size: 0.86rem;
+}
+
+.stats-card strong {
+  font-size: 1rem;
+  color: var(--on-surface);
+}
+
+.stats-divider {
+  height: 1px;
+  background: var(--outline-variant);
+}
+
+.stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+  color: var(--on-surface-variant);
+}
+
+.stats-list b {
+  color: var(--on-surface);
 }
 
 .phone-frame {
@@ -251,6 +323,25 @@ a {
 @media (max-width: 560px) {
   .app-shell {
     padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .stats-aside {
+    position: static;
+    top: auto;
+    width: 100%;
+    min-height: auto;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    border-bottom: 1px solid var(--outline-variant);
+    padding: 0.9rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .phone-frame {
